@@ -18,6 +18,7 @@ npm test
 
 - `app/layout.tsx`: SEO、OGP、Twitter Card、theme color
 - `app/page.tsx`: ページエントリ
+- `lib/site.ts`: 本番URL
 - `app/globals.css`: グローバルスタイル、端末モックアップ
 - `components/landing-page.tsx`: 各セクション、コピー、画像・動画URL
 - `components/phone-frame.tsx`: アプリ画面共通モックアップ

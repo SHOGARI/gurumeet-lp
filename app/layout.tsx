@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geist = Geist({
@@ -8,13 +9,12 @@ const geist = Geist({
   display: "swap",
 });
 
-const siteUrl = "https://gurumeet.pages.dev";
 const title = "GuruMeet | 「何食べる？」を、みんなのスワイプで決める。";
 const description =
   "もう「なんでもいい」で迷わない。グループ全員でスワイプして、その場で今日の一軒が決まる。";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title,
   description,
   keywords: ["GuruMeet", "グルミート", "飲食店", "グループ", "投票", "スワイプ"],
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "GuruMeet",
     title,
     description,
