@@ -188,7 +188,7 @@ function Header() {
       >
         <motion.a
           href="#top"
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0.65 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
           className="text-[22px] font-bold text-[#f4563f]"
@@ -288,7 +288,7 @@ function Hero() {
       <div className="section-shell relative grid items-center gap-12 lg:min-h-[740px] lg:grid-cols-[1.04fr_.96fr]">
         <div className="relative z-10 pt-6 lg:pt-0">
           <motion.p
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.72 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             className="eyebrow"
@@ -296,7 +296,7 @@ function Hero() {
             Swipe. Match. Eat.
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 1, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.78, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 text-[clamp(46px,6.3vw,86px)] font-[740] leading-[1.08]"
@@ -306,7 +306,7 @@ function Hero() {
             <span className="block whitespace-nowrap">終わらせる。</span>
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0.82, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="mt-7 max-w-[560px] text-base leading-8 text-[#655a55] sm:text-lg"
@@ -316,7 +316,7 @@ function Hero() {
             グループ全員でスワイプして、その場で今日の一軒が決まる。
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0.82, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.3 }}
             className="mt-9 flex flex-col gap-3 sm:flex-row"
