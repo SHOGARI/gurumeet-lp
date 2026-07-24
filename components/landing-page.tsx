@@ -299,11 +299,11 @@ function Hero() {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.78, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-5 text-[clamp(48px,7vw,94px)] font-[740] leading-[1.04]"
+            className="mt-5 text-[clamp(46px,6.3vw,86px)] font-[740] leading-[1.08]"
           >
-            <span className="block">「何食べる？」</span>
-            <span className="block">を<span className="text-[#f4563f]">10秒</span>で</span>
-            <span className="block">終わらせる。</span>
+            <span className="block whitespace-nowrap">「何食べる？」</span>
+            <span className="block whitespace-nowrap">を<span className="text-[#f4563f]">10秒</span>で</span>
+            <span className="block whitespace-nowrap">終わらせる。</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
