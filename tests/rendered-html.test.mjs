@@ -50,7 +50,7 @@ test("keeps SEO routes and image fallbacks in place", async () => {
   assert.match(await robotsResponse.text(), /User-Agent:\s*\*/i);
   assert.match(
     await sitemapResponse.text(),
-    /gurumeet-hackathon\.r4hw57x7tp\.chatgpt\.site/,
+    /gurumeet-lp\.vercel\.app/,
   );
   assert.match(pageSource, /onError=/);
   assert.match(pageSource, /prefers-reduced-motion|useReducedMotion/);
