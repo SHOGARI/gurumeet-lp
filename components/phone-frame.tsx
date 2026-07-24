@@ -21,6 +21,7 @@ export function PhoneFrame({
         width={780}
         height={1688}
         priority={priority}
+        unoptimized
         sizes="(max-width: 640px) 66vw, 320px"
       />
     </div>
