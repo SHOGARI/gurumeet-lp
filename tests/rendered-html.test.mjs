@@ -31,8 +31,9 @@ test("server-renders the complete GuruMeet landing page", async () => {
   const html = await response.text();
   assert.match(html, /GuruMeet/);
   assert.match(html, /何食べる？/);
-  assert.match(html, /全員でスワイプするだけ/);
-  assert.match(html, /決めるまで、たった3ステップ/);
+  assert.match(html, /全員でスワイプ/);
+  assert.match(html, /迷う工程を/);
+  assert.match(html, /決める人を/);
   assert.match(html, /今日のご飯/);
   assert.match(html, /og:image/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);

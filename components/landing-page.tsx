@@ -4,23 +4,14 @@ import Image from "next/image";
 import {
   ArrowDown,
   ArrowRight,
-  ChartNoAxesColumnIncreasing,
+  Check,
   ChevronRight,
-  CircleDollarSign,
-  Clock3,
   Code2,
   Heart,
-  LocateFixed,
-  Map,
   Menu,
-  MousePointer2,
   Play,
-  Plus,
-  Radio,
-  Sparkles,
-  Trophy,
-  Users,
   X,
+  XIcon,
 } from "lucide-react";
 import {
   AnimatePresence,
@@ -33,80 +24,44 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { PhoneFrame } from "./phone-frame";
 
-const FOOD_IMAGES = {
-  hero:
-    "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1600&q=85",
-  demo:
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=85",
-};
-
 const APP_URL = "#demo";
 const DEMO_VIDEO_URL = "";
 
+const FOOD_IMAGES = {
+  hero:
+    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1600&q=86",
+  ramen:
+    "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1200&q=84",
+  yakiniku:
+    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=84",
+  table:
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=86",
+  restaurant:
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=84",
+};
+
 const screens = [
-  { name: "ホーム", src: "/screens/01_home_mobile_390.png" },
-  { name: "ルーム作成", src: "/screens/02_create_mobile_390.png" },
-  { name: "招待", src: "/screens/03_invite_mobile_390.png" },
-  { name: "待機", src: "/screens/04_waiting_mobile_390.png" },
-  { name: "スワイプ", src: "/screens/05_swipe_mobile_390.png" },
-  { name: "投票完了", src: "/screens/06_voting_complete_mobile_390.png" },
-  { name: "結果", src: "/screens/07_result_mobile_390.png" },
+  { name: "ホーム", note: "条件を決める", src: "/screens/01_home_mobile_390.png" },
+  { name: "ルーム作成", note: "10秒で準備", src: "/screens/02_create_mobile_390.png" },
+  { name: "招待", note: "URLをシェア", src: "/screens/03_invite_mobile_390.png" },
+  { name: "待機", note: "みんなで参加", src: "/screens/04_waiting_mobile_390.png" },
+  { name: "スワイプ", note: "本音で選ぶ", src: "/screens/05_swipe_mobile_390.png" },
+  { name: "投票完了", note: "好みを集計", src: "/screens/06_voting_complete_mobile_390.png" },
+  { name: "結果", note: "今日の一軒", src: "/screens/07_result_mobile_390.png" },
 ];
 
-const steps = [
+const swipeCards = [
   {
-    number: "01",
-    title: "ルームを作る",
-    description: "人数とエリア、予算を選ぶだけ。URLを送れば全員すぐに参加できます。",
-    icon: Plus,
-    accent: "bg-[#ffe3dc] text-[#d83e2b]",
+    name: "炭火とワイン 渋谷店",
+    meta: "焼肉 · ¥3,000–4,000",
+    image: FOOD_IMAGES.yakiniku,
+    score: "4.6",
   },
   {
-    number: "02",
-    title: "店をスワイプ",
-    description: "写真を見て、直感で左右にスワイプ。遠慮なしの本音が集まります。",
-    icon: MousePointer2,
-    accent: "bg-[#dfece3] text-[#296849]",
-  },
-  {
-    number: "03",
-    title: "みんなの好みで決定",
-    description: "全員の「食べたい」が重なる一軒を、GuruMeetがその場で発表します。",
-    icon: Trophy,
-    accent: "bg-[#f7e8bd] text-[#7b5a09]",
-  },
-];
-
-const features = [
-  {
-    title: "リアルタイム投票",
-    description: "みんなのスワイプをその場で集計。",
-    icon: Radio,
-  },
-  {
-    title: "距離検索",
-    description: "今いる場所から行きやすい店だけ表示。",
-    icon: LocateFixed,
-  },
-  {
-    title: "予算検索",
-    description: "全員が納得できる価格帯で絞り込み。",
-    icon: CircleDollarSign,
-  },
-  {
-    title: "Google Maps連携",
-    description: "決まったら迷わず、そのままお店へ。",
-    icon: Map,
-  },
-  {
-    title: "ランキング表示",
-    description: "人気の理由までひと目でわかる。",
-    icon: ChartNoAxesColumnIncreasing,
-  },
-  {
-    title: "決選投票",
-    description: "接戦の候補は最後の一票で決める。",
-    icon: Sparkles,
+    name: "麺屋 しずく",
+    meta: "ラーメン · ¥1,000–2,000",
+    image: FOOD_IMAGES.ramen,
+    score: "4.4",
   },
 ];
 
@@ -119,8 +74,14 @@ const chatMessages = [
   { text: "気分じゃない", side: "right" },
 ];
 
+const steps = [
+  { number: "01", title: "ルームをつくる", copy: "場所と予算を選ぶ。" },
+  { number: "02", title: "みんなでスワイプ", copy: "写真を見て、直感で。" },
+  { number: "03", title: "今日の一軒が決まる", copy: "好みが重なる店を発表。" },
+];
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 26 },
   visible: { opacity: 1, y: 0 },
 };
 
@@ -134,14 +95,15 @@ function Reveal({
   delay?: number;
 }) {
   const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
       className={className}
       initial={reduceMotion ? false : "hidden"}
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.16 }}
       variants={fadeUp}
-      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.72, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
@@ -182,46 +144,37 @@ function Header() {
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
-      <nav
-        className="section-shell flex h-[72px] items-center justify-between sm:h-20"
-        aria-label="メインナビゲーション"
-      >
+      <nav className="section-shell flex h-[72px] items-center justify-between sm:h-20" aria-label="メインナビゲーション">
         <motion.a
           href="#top"
-          initial={{ opacity: 0.65 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="text-xl font-bold text-[#f4563f] sm:text-[22px]"
+          transition={{ duration: 0.8 }}
+          className="brand-mark"
           aria-label="GuruMeet トップ"
         >
+          <span>G</span>
           GuruMeet
         </motion.a>
         <div className="hidden items-center gap-8 md:flex">
           {links.map(([label, href]) => (
-            <a
-              key={label}
-              href={href}
-              className="text-sm font-semibold text-[#514945] transition-colors hover:text-[#f4563f]"
-            >
+            <a key={label} href={href} className="nav-link">
               {label}
             </a>
           ))}
-          <a
-            href={APP_URL}
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-[#201d1b] px-5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
-          >
+          <a href={APP_URL} className="button button-dark !h-11 !px-5 !text-sm">
             今すぐ試す
-            <ArrowRight size={16} aria-hidden="true" />
+            <ArrowRight size={15} aria-hidden="true" />
           </a>
         </div>
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="grid size-11 place-items-center rounded-full border border-black/10 bg-white/70 md:hidden"
+          className="icon-button md:hidden"
           aria-label={open ? "メニューを閉じる" : "メニューを開く"}
           aria-expanded={open}
         >
-          {open ? <X size={20} /> : <Menu size={20} />}
+          {open ? <X size={19} /> : <Menu size={19} />}
         </button>
       </nav>
       <AnimatePresence>
@@ -230,14 +183,14 @@ function Header() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="glass section-shell rounded-[20px] p-3 md:hidden"
+            className="glass section-shell rounded-2xl p-2 md:hidden"
           >
             {links.map(([label, href]) => (
               <a
                 key={label}
                 href={href}
                 onClick={() => setOpen(false)}
-                className="flex h-12 items-center justify-between rounded-[14px] px-3 text-sm font-bold"
+                className="flex h-12 items-center justify-between rounded-xl px-3 text-sm font-semibold"
               >
                 {label}
                 <ChevronRight size={16} />
@@ -250,106 +203,144 @@ function Header() {
   );
 }
 
+function SwipeCard({ onSwipe }: { onSwipe: (direction: "left" | "right") => void }) {
+  const [active, setActive] = useState(0);
+  const card = swipeCards[active];
+
+  const completeSwipe = (direction: "left" | "right") => {
+    onSwipe(direction);
+    window.setTimeout(() => setActive((value) => (value + 1) % swipeCards.length), 140);
+  };
+
+  return (
+    <div className="hero-swipe-card" aria-label="飲食店カードのスワイプデモ">
+      <motion.div
+        key={card.name}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.7}
+        onDragEnd={(_, info) => {
+          if (Math.abs(info.offset.x) > 70) completeSwipe(info.offset.x > 0 ? "right" : "left");
+        }}
+        whileDrag={{ scale: 1.025, rotate: 1.5 }}
+        className="relative h-full cursor-grab overflow-hidden active:cursor-grabbing"
+      >
+        <Image
+          src={card.image}
+          alt={card.name}
+          fill
+          priority
+          sizes="(max-width: 768px) 82vw, 400px"
+          className="object-cover"
+          onError={(event) => {
+            event.currentTarget.style.display = "none";
+          }}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(8,8,8,.82)_100%)]" />
+        <div className="absolute left-5 right-5 top-5 flex items-center justify-between">
+          <span className="rounded-full bg-white/88 px-3 py-1.5 text-[11px] font-bold text-black backdrop-blur">
+            徒歩 5分
+          </span>
+          <span className="rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur">
+            ★ {card.score}
+          </span>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+          <p className="text-xl font-bold">{card.name}</p>
+          <p className="mt-1 text-xs font-medium text-white/68">{card.meta}</p>
+        </div>
+      </motion.div>
+      <div className="absolute -bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-3">
+        <button type="button" onClick={() => completeSwipe("left")} className="swipe-action" aria-label="この店は選ばない">
+          <XIcon size={19} />
+        </button>
+        <button type="button" onClick={() => completeSwipe("right")} className="swipe-action swipe-action-like" aria-label="この店を食べたいにする">
+          <Heart size={19} fill="currentColor" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [swipeLabel, setSwipeLabel] = useState<"SKIP" | "EAT">("EAT");
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const phoneY = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const backdropY = useTransform(scrollYProgress, [0, 1], [0, 55]);
+  const stageY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const stageRotate = useTransform(scrollYProgress, [0, 1], [0, -2.5]);
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, 32]);
 
   return (
-    <section
-      id="top"
-      ref={sectionRef}
-      className="relative min-h-[860px] overflow-hidden pb-8 pt-24 sm:min-h-[920px] sm:pb-12 sm:pt-28 lg:min-h-[860px] lg:pb-20 lg:pt-24"
-    >
-      <motion.div
-        style={{ y: backdropY }}
-        className="absolute -right-[36%] top-[42%] h-[52%] w-[112%] opacity-20 blur-[5px] sm:-right-[10%] sm:top-[8%] sm:h-[72%] sm:w-[72%] sm:opacity-25 lg:right-[-2%] lg:w-[56%]"
-        aria-hidden="true"
-      >
+    <section id="top" ref={sectionRef} className="hero-section">
+      <div className="hero-photo" aria-hidden="true">
         <Image
           src={FOOD_IMAGES.hero}
           alt=""
           fill
           priority
-          sizes="(max-width: 1024px) 72vw, 56vw"
-          className="rounded-[48px] object-cover"
+          sizes="100vw"
+          className="object-cover"
           onError={(event) => {
             event.currentTarget.style.display = "none";
           }}
         />
-      </motion.div>
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,#fffaf7_0%,rgba(255,250,247,.96)_42%,rgba(255,250,247,.22)_100%)] lg:bg-[linear-gradient(90deg,#fffaf7_0%,rgba(255,250,247,.97)_42%,rgba(255,250,247,.25)_72%,rgba(255,250,247,.6)_100%)]" />
-      <div className="grain" />
-
-      <div className="section-shell relative grid items-center gap-7 sm:gap-12 lg:min-h-[740px] lg:grid-cols-[1.04fr_.96fr]">
-        <div className="relative z-10 lg:pt-0">
+      </div>
+      <div className="section-shell hero-grid">
+        <motion.div style={{ y: copyY }} className="relative z-10 pt-24 sm:pt-28 lg:pt-0">
           <motion.p
-            initial={{ opacity: 0.72 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="eyebrow"
+            className="micro-label"
           >
-            Swipe. Match. Eat.
+            Swipe to decide
           </motion.p>
           <motion.h1
-            initial={{ opacity: 1, y: 24 }}
+            initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.78, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4 text-[clamp(42px,11.5vw,50px)] font-[740] leading-[1.05] sm:mt-5 sm:text-[clamp(46px,6.3vw,86px)] sm:leading-[1.08]"
+            transition={{ duration: 0.85, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+            className="hero-title"
           >
-            <span className="block whitespace-nowrap">「何食べる？」</span>
-            <span className="block whitespace-nowrap">を<span className="text-[#f4563f]">10秒</span>で</span>
-            <span className="block whitespace-nowrap">終わらせる。</span>
+            「何食べる？」
+            <br />
+            を<span>10秒</span>で終わらせる。
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0.82, y: 14 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#655a55] sm:mt-7 sm:text-lg sm:leading-8"
+            transition={{ duration: 0.7, delay: 0.17 }}
+            className="hero-copy"
           >
-            もう「なんでもいい」で迷わない。
-            <br className="hidden sm:block" />
-            グループ全員でスワイプして、その場で今日の一軒が決まる。
+            みんなでスワイプ。
+            <br />
+            好みが重なる、今日の一軒へ。
           </motion.p>
           <motion.div
-            initial={{ opacity: 0.82, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.3 }}
-            className="mt-6 grid grid-cols-2 gap-3 sm:mt-9 sm:flex sm:flex-row"
+            transition={{ duration: 0.65, delay: 0.26 }}
+            className="mt-7 flex flex-wrap gap-3 sm:mt-9"
           >
-            <motion.a
-              href={APP_URL}
-              whileHover={{ scale: 1.025 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#f4563f] px-4 text-sm font-bold text-white shadow-[0_12px_32px_rgba(244,86,63,.24)] sm:h-14 sm:px-7 sm:text-base"
-            >
+            <a href={APP_URL} className="button button-accent">
               今すぐ試す
-              <ArrowRight size={18} />
-            </motion.a>
-            <motion.a
-              href="#demo"
-              whileHover={{ scale: 1.025 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 text-sm font-bold backdrop-blur sm:h-14 sm:px-7 sm:text-base"
-            >
-              <Play size={17} fill="currentColor" />
+              <ArrowRight size={17} />
+            </a>
+            <a href="#demo" className="button button-light">
+              <Play size={15} fill="currentColor" />
               デモを見る
-            </motion.a>
+            </a>
           </motion.div>
-        </div>
+        </motion.div>
 
-        <motion.div
-          style={{ y: phoneY }}
-          className="relative mx-auto h-[430px] w-full max-w-[520px] sm:h-[650px] lg:h-[720px]"
-        >
+        <motion.div style={{ y: stageY, rotate: stageRotate }} className="hero-stage">
           <motion.div
-            animate={{ y: [0, -10, 0], rotate: [-1.2, -0.3, -1.2] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute left-1/2 top-1/2 w-[228px] -translate-x-1/2 -translate-y-1/2 max-[374px]:w-[214px] sm:w-[300px] lg:w-[322px]"
+            initial={{ opacity: 0, x: 36, rotate: 5 }}
+            animate={{ opacity: 1, x: 0, rotate: 3.5 }}
+            transition={{ duration: 0.95, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="hero-phone"
           >
             <PhoneFrame
               src="/screens/05_swipe_mobile_390.png"
@@ -357,129 +348,90 @@ function Hero() {
               priority
             />
           </motion.div>
-
           <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="glass absolute right-[-10px] top-[13%] z-10 origin-right scale-[.86] rounded-[20px] px-4 py-3 sm:right-[-18px] sm:top-[16%] sm:scale-100 lg:right-[-20px]"
+            initial={{ opacity: 0, x: -28, rotate: -6 }}
+            animate={{ opacity: 1, x: 0, rotate: -4.5 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="hero-card-wrap"
           >
-            <div className="flex items-center gap-3">
-              <span className="grid size-9 place-items-center rounded-full bg-[#ffe2dc] text-[#f4563f]">
-                <Users size={18} />
-              </span>
-              <div>
-                <p className="text-[11px] font-bold text-[#8a7c76]">参加中</p>
-                <p className="text-sm font-bold">4人でスワイプ</p>
-              </div>
-            </div>
+            <SwipeCard onSwipe={(direction) => setSwipeLabel(direction === "right" ? "EAT" : "SKIP")} />
           </motion.div>
-
-          <motion.div
-            animate={{ y: [0, -7, 0] }}
-            transition={{ duration: 4.8, delay: 0.6, repeat: Infinity, ease: "easeInOut" }}
-            className="glass absolute bottom-[7%] left-[-10px] z-10 origin-left scale-[.86] rounded-[20px] p-3 sm:bottom-[12%] sm:left-[-22px] sm:scale-100"
-          >
-            <div className="flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-full bg-[#f4563f] text-white">
-                <Heart size={20} fill="currentColor" />
-              </span>
-              <div>
-                <p className="text-[11px] font-bold text-[#8a7c76]">MATCH!</p>
-                <p className="text-sm font-bold">全員が食べたい</p>
-              </div>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={swipeLabel}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className={`hero-stamp ${swipeLabel === "EAT" ? "hero-stamp-like" : ""}`}
+            >
+              {swipeLabel}
+            </motion.span>
+          </AnimatePresence>
+          <div className="hero-participants glass">
+            <div className="avatar-stack">
+              <span>Y</span>
+              <span>K</span>
+              <span>M</span>
             </div>
-          </motion.div>
+            <p><strong>4人</strong>が参加中</p>
+          </div>
         </motion.div>
       </div>
-
-      <motion.a
-        href="#problem"
-        animate={{ y: [0, 7, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] font-bold uppercase tracking-[.18em] text-[#8e817b] lg:flex"
-      >
+      <a href="#problem" className="scroll-cue" aria-label="次のセクションへ">
         Scroll
-        <ArrowDown size={15} />
-      </motion.a>
+        <ArrowDown size={14} />
+      </a>
     </section>
   );
 }
 
 function Problem() {
   return (
-    <section id="problem" className="bg-white py-20 sm:py-32 lg:py-40">
-      <div className="section-shell grid items-center gap-12 sm:gap-16 lg:grid-cols-[.92fr_1.08fr]">
-        <Reveal>
-          <span className="eyebrow">The problem</span>
-          <h2 className="display-heading sm:!text-[clamp(38px,4.5vw,68px)]">
-            毎回こんな会話、
-            <br />
-            していませんか？
-          </h2>
-          <p className="body-copy mt-6 max-w-[510px]">
-            みんなの好みを聞くほど、候補は増えて、決める人だけが疲れていく。
-          </p>
-          <div className="mt-9 flex items-center gap-4">
-            <span className="grid size-12 place-items-center rounded-full bg-[#fff0ec] text-[#f4563f]">
-              <Clock3 size={22} />
-            </span>
+    <section id="problem" className="problem-section">
+      <div className="section-shell problem-grid">
+        <Reveal className="problem-copy">
+          <p className="micro-label text-white/45">The endless conversation</p>
+          <h2>決まらない夜に、<br />もう付き合わない。</h2>
+          <div className="problem-time">
+            <span><CountUp value={20} /></span>
             <div>
-              <p className="text-3xl font-bold">
-                <CountUp value={20} />
-                <span className="ml-1 text-lg">分</span>
-              </p>
-              <p className="text-sm font-semibold text-[#8a7c76]">決まらないまま過ぎる時間</p>
+              <strong>min.</strong>
+              <p>「なんでもいい」で<br />消えていく平均時間</p>
             </div>
           </div>
         </Reveal>
-
-        <Reveal delay={0.08}>
-          <div className="mx-auto max-w-[560px] rounded-[24px] border border-black/8 bg-[#f6f7f8] p-4 shadow-[0_24px_70px_rgba(32,29,27,.07)] sm:p-7">
-            <div className="mb-6 flex items-center justify-between border-b border-black/7 pb-4">
-              <div className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-full bg-[#dbe8df]">
-                  <Users size={19} />
-                </span>
-                <div>
-                  <p className="text-sm font-bold">今日どこ行く？</p>
-                  <p className="text-[11px] font-semibold text-[#8e8480]">メンバー 4人</p>
-                </div>
-              </div>
-              <span className="size-2 rounded-full bg-[#5cc47d]" />
+        <Reveal delay={0.08} className="chat-window">
+          <div className="chat-topbar">
+            <div className="avatar-stack">
+              <span>Y</span><span>K</span><span>M</span>
             </div>
-            <div className="space-y-3" aria-label="よくあるグループチャット">
-              {chatMessages.map((message, index) => (
-                <motion.div
-                  key={message.text}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.08 * index, duration: 0.35 }}
-                  className={`flex ${message.side === "right" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[78%] rounded-[18px] px-4 py-3 text-sm font-semibold ${
-                      message.side === "right"
-                        ? "rounded-tr-[5px] bg-[#8ad568] text-[#1b3119]"
-                        : "rounded-tl-[5px] bg-white shadow-[0_3px_12px_rgba(0,0,0,.04)]"
-                    }`}
-                  >
-                    {message.text}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <div className="mt-7 border-t border-black/7 pt-6 text-center">
-              <p className="text-sm font-bold text-[#9b8e88]">そして、時間だけが過ぎる。</p>
-            </div>
+            <p>今日どこ行く？</p>
+            <span className="online-dot" />
           </div>
+          <div className="space-y-2.5">
+            {chatMessages.map((message, index) => (
+              <motion.div
+                key={message.text}
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.07, duration: 0.32 }}
+                className={`flex ${message.side === "right" ? "justify-end" : ""}`}
+              >
+                <p className={`chat-bubble ${message.side === "right" ? "chat-bubble-me" : ""}`}>
+                  {message.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+          <p className="mt-6 border-t border-black/7 pt-5 text-center text-xs font-semibold text-black/35">
+            19:42　まだ決まらない
+          </p>
         </Reveal>
       </div>
-      <Reveal className="section-shell mt-16 text-center sm:mt-28">
-        <p className="text-sm font-bold text-[#f4563f]">GuruMeetなら</p>
-        <p className="mt-3 text-[32px] font-[730] leading-tight sm:text-[clamp(34px,5vw,64px)]">
-          全員でスワイプするだけ。
-        </p>
+      <Reveal className="section-shell problem-answer">
+        <p>GuruMeetなら</p>
+        <h3>会話の代わりに、<br className="sm:hidden" />全員でスワイプ。</h3>
       </Reveal>
     </section>
   );
@@ -487,52 +439,45 @@ function Problem() {
 
 function Solution() {
   return (
-    <section id="solution" className="py-20 sm:py-32 lg:py-40">
-      <div className="section-shell">
-        <Reveal className="max-w-[800px]">
-          <span className="eyebrow">How it works</span>
-          <h2 className="display-heading">決めるまで、たった3ステップ。</h2>
-        </Reveal>
-        <div className="mt-10 grid gap-4 sm:mt-14 lg:mt-20 lg:grid-cols-3">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <Reveal key={step.title} delay={index * 0.1}>
-                <motion.article
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.25 }}
-                  className="relative min-h-[280px] overflow-hidden rounded-[24px] border border-black/8 bg-white p-6 shadow-[0_12px_40px_rgba(44,30,24,.05)] sm:min-h-[320px] sm:p-9"
-                >
-                  <span className="absolute right-5 top-2 text-[80px] font-bold text-black/[.035]">
-                    {step.number}
-                  </span>
-                  <div className={`grid size-14 place-items-center rounded-[18px] ${step.accent}`}>
-                    <Icon size={25} />
+    <section id="solution" className="solution-section">
+      <div className="section-shell solution-layout">
+        <div className="solution-copy">
+          <Reveal>
+            <p className="micro-label">How it works</p>
+            <h2 className="section-title">迷う工程を、<br />3つにした。</h2>
+          </Reveal>
+          <div className="step-list">
+            {steps.map((step, index) => (
+              <Reveal key={step.number} delay={index * 0.08}>
+                <article className="step-row">
+                  <span>{step.number}</span>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.copy}</p>
                   </div>
-                  <p className="mt-10 text-xs font-bold tracking-[.14em] text-[#9a8d87] sm:mt-14">
-                    STEP {step.number}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-bold">{step.title}</h3>
-                  <p className="mt-4 text-[15px] leading-7 text-[#766a64]">{step.description}</p>
-                </motion.article>
+                </article>
               </Reveal>
-            );
-          })}
+            ))}
+          </div>
         </div>
-        <Reveal className="mt-10 grid grid-cols-3 divide-x divide-black/10 rounded-[24px] border border-black/8 bg-white py-6 sm:mt-16 sm:py-9">
-          {[
-            [10, "秒で決定"],
-            [3, "ステップ"],
-            [0, "円で使える"],
-          ].map(([value, label]) => (
-            <div key={label} className="text-center">
-              <p className="text-[28px] font-bold text-[#f4563f] sm:text-5xl">
-                <CountUp value={Number(value)} />
-                {value === 0 ? "円" : ""}
-              </p>
-              <p className="mt-2 text-[11px] font-bold text-[#857872] sm:text-sm">{label}</p>
+        <Reveal className="solution-stage">
+          <div className="solution-note">
+            <span className="online-dot" />
+            リアルタイムで同期
+          </div>
+          <div className="solution-phone solution-phone-back">
+            <PhoneFrame src="/screens/04_waiting_mobile_390.png" alt="GuruMeetの待機画面" />
+          </div>
+          <div className="solution-phone solution-phone-front">
+            <PhoneFrame src="/screens/07_result_mobile_390.png" alt="GuruMeetの結果画面" />
+          </div>
+          <div className="match-note glass">
+            <span><Check size={14} strokeWidth={3} /></span>
+            <div>
+              <small>MATCHED</small>
+              <strong>全員の好みが一致</strong>
             </div>
-          ))}
+          </div>
         </Reveal>
       </div>
     </section>
@@ -541,42 +486,39 @@ function Solution() {
 
 function Screens() {
   return (
-    <section id="screens" className="overflow-hidden bg-[#201d1b] py-20 text-white sm:py-32 lg:py-40">
-      <div className="section-shell">
+    <section id="screens" className="screens-section">
+      <div className="section-shell screens-heading">
         <Reveal>
-          <span className="eyebrow !text-[#ff806c]">Inside GuruMeet</span>
-          <div className="mt-4 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
-            <h2 className="max-w-[780px] text-[34px] font-[720] leading-[1.1] sm:text-[clamp(38px,5.2vw,74px)] sm:leading-[1.08]">
-              迷いが、期待に変わる。
-            </h2>
-            <p className="max-w-[370px] text-sm leading-7 text-white/55 sm:text-base">
-              作る、誘う、選ぶ、決まる。
-              <br />
-              すべての瞬間を、気持ちよく。
-            </p>
-          </div>
+          <p className="micro-label text-white/45">Inside the product</p>
+          <h2>触れる前から、<br />使い方がわかる。</h2>
+        </Reveal>
+        <Reveal delay={0.08} className="screens-index">
+          <span>01</span>
+          <div />
+          <span>07</span>
         </Reveal>
       </div>
-      <div className="screen-scroller mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-8 sm:mt-16 sm:gap-9 sm:px-[max(20px,calc((100vw-1180px)/2))] sm:pb-12 lg:mt-20">
+      <div className="screen-scroller">
         {screens.map((screen, index) => (
           <motion.figure
             key={screen.name}
-            initial={{ opacity: 0.45, scale: 0.94 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ amount: 0.58 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="w-[226px] shrink-0 snap-center sm:w-[286px]"
+            initial={{ opacity: 0.42, y: 50, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ amount: 0.62 }}
+            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            className={`screen-item ${index === 4 ? "screen-item-featured" : ""}`}
           >
             <PhoneFrame src={screen.src} alt={`GuruMeetの${screen.name}画面`} />
-            <figcaption className="mt-5 flex items-center justify-between px-2">
-              <span className="text-sm font-bold">{screen.name}</span>
-              <span className="text-xs font-bold text-white/35">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+            <figcaption>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <strong>{screen.name}</strong>
+                <small>{screen.note}</small>
+              </div>
             </figcaption>
           </motion.figure>
         ))}
-        <div className="w-2 shrink-0" aria-hidden="true" />
+        <div className="w-4 shrink-0" aria-hidden="true" />
       </div>
     </section>
   );
@@ -584,36 +526,82 @@ function Screens() {
 
 function Features() {
   return (
-    <section id="features" className="bg-white py-20 sm:py-32 lg:py-40">
+    <section id="features" className="features-section">
       <div className="section-shell">
-        <Reveal className="max-w-[820px]">
-          <span className="eyebrow">Everything you need</span>
-          <h2 className="display-heading">全員が「これならいい」と思える仕組み。</h2>
+        <Reveal className="features-heading">
+          <p className="micro-label">Built for the group</p>
+          <h2 className="section-title">決める人を、<br />ひとりにしない。</h2>
         </Reveal>
-        <div className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Reveal key={feature.title} delay={(index % 3) * 0.06}>
-                <motion.article
-                  whileHover={{ y: -5, borderColor: "rgba(244,86,63,.28)" }}
-                  className="group min-h-[180px] rounded-[22px] border border-black/8 bg-[#fffdfb] p-6 transition-shadow hover:shadow-[0_18px_50px_rgba(45,31,26,.07)] sm:min-h-[210px] sm:p-7"
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="grid size-12 place-items-center rounded-[16px] bg-[#f3efec] text-[#403a37] transition-colors group-hover:bg-[#ffe4de] group-hover:text-[#f4563f]">
-                      <Icon size={23} />
-                    </span>
-                    <ArrowRight
-                      size={18}
-                      className="text-black/20 transition-transform group-hover:translate-x-1 group-hover:text-[#f4563f]"
-                    />
-                  </div>
-                  <h3 className="mt-6 text-xl font-bold sm:mt-8">{feature.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-[#776b65]">{feature.description}</p>
-                </motion.article>
-              </Reveal>
-            );
-          })}
+        <div className="bento-grid">
+          <Reveal className="bento bento-live">
+            <div className="bento-copy">
+              <span>LIVE</span>
+              <h3>全員の「食べたい」が、<br />その場で集まる。</h3>
+              <p>リアルタイム投票</p>
+            </div>
+            <div className="vote-visual">
+              <div className="vote-row">
+                <div className="avatar-stack"><span>Y</span><span>K</span><span>M</span></div>
+                <strong>3 / 4 voted</strong>
+              </div>
+              <div className="vote-bars">
+                <i style={{ width: "84%" }} />
+                <i style={{ width: "62%" }} />
+                <i style={{ width: "42%" }} />
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.05} className="bento bento-map">
+            <Image
+              src={FOOD_IMAGES.restaurant}
+              alt="現在地から近いレストラン"
+              fill
+              sizes="(max-width: 900px) 100vw, 42vw"
+              className="object-cover"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.03)_30%,rgba(0,0,0,.78)_100%)]" />
+            <div className="map-pin">現在地から 800m</div>
+            <div className="bento-copy absolute bottom-0 text-white">
+              <h3>近い。予算内。<br />ちゃんと食べたい。</h3>
+              <p className="!text-white/60">距離・予算検索</p>
+            </div>
+          </Reveal>
+
+          <Reveal className="bento bento-ranking">
+            <div className="bento-copy">
+              <span>TOP MATCH</span>
+              <h3>好みの重なりを、<br />ランキングで。</h3>
+            </div>
+            <ol className="ranking-list">
+              <li><b>01</b><span>炭火とワイン</span><strong>92%</strong></li>
+              <li><b>02</b><span>麺屋 しずく</span><strong>78%</strong></li>
+              <li><b>03</b><span>トラットリア 8</span><strong>65%</strong></li>
+            </ol>
+          </Reveal>
+
+          <Reveal delay={0.05} className="bento bento-detail">
+            <div className="detail-phone">
+              <PhoneFrame src="/screens/06_voting_complete_mobile_390.png" alt="投票完了画面" />
+            </div>
+            <div className="bento-copy">
+              <h3>接戦なら、<br />最後の一票。</h3>
+              <p>決選投票</p>
+            </div>
+          </Reveal>
+
+          <Reveal className="bento bento-maps-link">
+            <div className="route-line" aria-hidden="true"><i /><i /><i /></div>
+            <div className="bento-copy">
+              <span>GO</span>
+              <h3>決まったら、<br />そのままお店へ。</h3>
+              <p>Google Maps連携</p>
+            </div>
+            <ArrowRight size={22} className="absolute right-7 top-7" />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -624,79 +612,58 @@ function Demo() {
   const [playing, setPlaying] = useState(false);
 
   return (
-    <section id="demo" className="py-20 sm:py-32 lg:py-40">
+    <section id="demo" className="demo-section">
       <div className="section-shell">
-        <Reveal className="text-center">
-          <span className="eyebrow">Live demo</span>
-          <h2 className="display-heading mx-auto">見ると、10秒でわかる。</h2>
-          <p className="body-copy mx-auto mt-5 max-w-[600px]">
-            ルームを作ってから今日の一軒が決まるまでを、短いデモで。
-          </p>
+        <Reveal className="demo-heading">
+          <p className="micro-label">30 sec demo</p>
+          <h2>見ると、もっと早い。</h2>
         </Reveal>
-        <Reveal delay={0.08} className="mt-12 sm:mt-16">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[24px] bg-[#24201e] shadow-[0_30px_90px_rgba(43,29,23,.15)] sm:aspect-video">
-            {DEMO_VIDEO_URL && playing ? (
-              <iframe
-                src={DEMO_VIDEO_URL}
-                title="GuruMeet デモ動画"
-                className="absolute inset-0 h-full w-full"
-                allow="autoplay; fullscreen"
-                allowFullScreen
+        <Reveal delay={0.07} className="demo-stage">
+          {DEMO_VIDEO_URL && playing ? (
+            <iframe
+              src={DEMO_VIDEO_URL}
+              title="GuruMeet デモ動画"
+              className="absolute inset-0 h-full w-full"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            />
+          ) : (
+            <>
+              <Image
+                src={FOOD_IMAGES.table}
+                alt="友人と食事を囲むテーブル"
+                fill
+                sizes="(max-width: 1220px) calc(100vw - 32px), 1180px"
+                className="object-cover"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
               />
-            ) : (
-              <>
-                <Image
-                  src={FOOD_IMAGES.demo}
-                  alt="友人と食事を囲むテーブル"
-                  fill
-                  sizes="(max-width: 1220px) calc(100vw - 40px), 1180px"
-                  className="object-cover opacity-65"
-                  onError={(event) => {
-                    event.currentTarget.style.display = "none";
-                  }}
-                />
-                <div className="absolute inset-0 bg-black/20" />
-                {playing ? (
-                  <div className="glass absolute left-1/2 top-1/2 w-[min(88%,420px)] -translate-x-1/2 -translate-y-1/2 rounded-[20px] p-4 text-center text-[#201d1b] sm:p-6">
-                    <span className="mx-auto grid size-12 place-items-center rounded-full bg-[#ffe4de] text-[#f4563f]">
-                      <Play size={20} fill="currentColor" />
-                    </span>
-                    <p className="mt-4 text-lg font-bold">デモ動画をここに埋め込めます</p>
-                    <p className="mt-2 text-sm leading-6 text-[#766a64]">
-                      URLを設定すると、このエリアでそのまま再生されます。
-                    </p>
-                    <a
-                      href="#screens"
-                      className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#d93f2c]"
-                    >
-                      アプリ画面を見る
-                      <ArrowRight size={16} />
-                    </a>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setPlaying(true)}
-                    className="absolute left-1/2 top-1/2 grid size-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-[#201d1b] shadow-2xl transition-transform hover:scale-105 sm:size-24"
-                    aria-label="デモ動画を再生"
-                  >
-                    <Play size={28} fill="currentColor" className="translate-x-0.5" />
-                  </button>
-                )}
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white sm:bottom-8 sm:left-8 sm:right-8">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[.16em] text-white/60">
-                      GuruMeet in 30 sec
-                    </p>
-                    <p className="mt-2 text-lg font-bold sm:text-2xl">今日の一軒が決まるまで</p>
-                  </div>
-                  <span className="hidden rounded-full border border-white/30 bg-black/20 px-4 py-2 text-xs font-bold backdrop-blur sm:block">
-                    DEMO PLACEHOLDER
-                  </span>
+              <div className="absolute inset-0 bg-black/30" />
+              <div className="demo-phone">
+                <PhoneFrame src="/screens/07_result_mobile_390.png" alt="GuruMeetで決まったお店の結果画面" />
+              </div>
+              {playing ? (
+                <div className="demo-placeholder glass">
+                  <p>デモ動画をここに埋め込めます</p>
+                  <a href="#screens">アプリ画面を見る <ArrowRight size={15} /></a>
                 </div>
-              </>
-            )}
-          </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setPlaying(true)}
+                  className="demo-play"
+                  aria-label="デモ動画を再生"
+                >
+                  <Play size={22} fill="currentColor" />
+                </button>
+              )}
+              <div className="demo-caption">
+                <span>GuruMeet in 30 seconds</span>
+                <strong>ルーム作成から、今日の一軒まで。</strong>
+              </div>
+            </>
+          )}
         </Reveal>
       </div>
     </section>
@@ -705,28 +672,15 @@ function Demo() {
 
 function FinalCta() {
   return (
-    <section className="bg-white py-8 sm:py-12">
+    <section className="final-cta">
       <div className="section-shell">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[24px] bg-[#f4563f] px-6 py-20 text-center text-white sm:px-12 sm:py-28 lg:py-32">
-            <p className="text-xs font-bold uppercase tracking-[.18em] text-white/70">
-              Ready to eat?
-            </p>
-            <h2 className="relative mt-5 text-[clamp(36px,10vw,90px)] font-[740] leading-[1.08]">
-              今日のご飯、
-              <br />
-              もう迷わない。
-            </h2>
-            <motion.a
-              href={APP_URL}
-              whileHover={{ scale: 1.035 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative mt-8 inline-flex h-14 items-center gap-3 rounded-full bg-white px-7 text-sm font-bold text-[#d93f2c] shadow-[0_16px_45px_rgba(124,31,18,.2)] sm:mt-10 sm:h-16 sm:px-8 sm:text-base"
-            >
-              GuruMeetを試す
-              <ArrowRight size={19} />
-            </motion.a>
-          </div>
+          <p className="micro-label text-white/45">Tonight, decided.</p>
+          <h2>今日のご飯、<br />もう迷わない。</h2>
+          <a href={APP_URL} className="button button-white">
+            GuruMeetを試す
+            <ArrowRight size={17} />
+          </a>
         </Reveal>
       </div>
     </section>
@@ -735,36 +689,19 @@ function FinalCta() {
 
 function Footer() {
   return (
-    <footer className="bg-white pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-14 sm:pt-16">
+    <footer className="site-footer">
       <div className="section-shell">
-        <div className="flex flex-col justify-between gap-10 border-t border-black/10 pt-8 sm:flex-row sm:items-end">
+        <div className="footer-main">
           <div>
-            <p className="text-2xl font-bold text-[#f4563f]">GuruMeet</p>
-            <p className="mt-3 max-w-[390px] text-sm leading-6 text-[#7c706a]">
-              「何食べる？」を、みんなのスワイプで決める。
-            </p>
+            <p className="brand-mark"><span>G</span>GuruMeet</p>
+            <p className="mt-4 text-sm text-black/45">「何食べる？」を、みんなのスワイプで決める。</p>
           </div>
-          <div className="flex flex-wrap gap-5 text-sm font-bold">
-            <a
-              href="https://github.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 transition-colors hover:text-[#f4563f]"
-            >
-              <Code2 size={17} />
-              GitHub
-            </a>
-            <a
-              href="https://talent.supporterz.jp/geekcamp/"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-[#f4563f]"
-            >
-              技育CAMP
-            </a>
+          <div className="footer-links">
+            <a href="https://github.com/" target="_blank" rel="noreferrer"><Code2 size={15} />GitHub</a>
+            <a href="https://talent.supporterz.jp/geekcamp/" target="_blank" rel="noreferrer">技育CAMP</a>
           </div>
         </div>
-        <div className="mt-10 flex flex-col justify-between gap-2 text-xs font-semibold text-[#a1948e] sm:flex-row">
+        <div className="footer-bottom">
           <p>© {new Date().getFullYear()} GuruMeet.</p>
           <p>Made for better nights out.</p>
         </div>
