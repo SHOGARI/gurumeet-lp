@@ -9,7 +9,6 @@ import {
   Code2,
   Heart,
   Menu,
-  Play,
   X,
   XIcon,
 } from "lucide-react";
@@ -24,8 +23,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { PhoneFrame } from "./phone-frame";
 
-const APP_URL = "#demo";
-const DEMO_VIDEO_URL = "";
+const APP_URL = "#experience";
 
 const FOOD_IMAGES = {
   hero:
@@ -78,6 +76,12 @@ const steps = [
   { number: "01", title: "ルームをつくる", copy: "場所と予算を選ぶ。" },
   { number: "02", title: "みんなでスワイプ", copy: "写真を見て、直感で。" },
   { number: "03", title: "今日の一軒が決まる", copy: "好みが重なる店を発表。" },
+];
+
+const finalists = [
+  { rank: "01", name: "炭火とワイン", score: "92%", votes: 4 },
+  { rank: "02", name: "麺屋 しずく", score: "78%", votes: 3 },
+  { rank: "03", name: "トラットリア 8", score: "65%", votes: 2 },
 ];
 
 const fadeUp = {
@@ -328,9 +332,9 @@ function Hero() {
               今すぐ試す
               <ArrowRight size={17} />
             </a>
-            <a href="#demo" className="button button-light">
-              <Play size={15} fill="currentColor" />
-              デモを見る
+            <a href="#experience" className="button button-light">
+              体験を見る
+              <ArrowDown size={15} />
             </a>
           </motion.div>
         </motion.div>
@@ -608,62 +612,66 @@ function Features() {
   );
 }
 
-function Demo() {
-  const [playing, setPlaying] = useState(false);
-
+function Experience() {
   return (
-    <section id="demo" className="demo-section">
-      <div className="section-shell">
-        <Reveal className="demo-heading">
-          <p className="micro-label">30 sec demo</p>
-          <h2>見ると、もっと早い。</h2>
+    <section id="experience" className="experience-section">
+      <div className="section-shell experience-layout">
+        <Reveal className="experience-copy">
+          <p className="micro-label">The moment</p>
+          <h2>決まる瞬間まで、<br />画面が主役になる。</h2>
+          <p>
+            食べたい店だけが自然に残って、最後は全員が納得できる一軒へ。
+            プレゼンでも、スマホでも、動きだけで伝わる体験です。
+          </p>
         </Reveal>
-        <Reveal delay={0.07} className="demo-stage">
-          {DEMO_VIDEO_URL && playing ? (
-            <iframe
-              src={DEMO_VIDEO_URL}
-              title="GuruMeet デモ動画"
-              className="absolute inset-0 h-full w-full"
-              allow="autoplay; fullscreen"
-              allowFullScreen
+        <Reveal delay={0.07} className="experience-stage">
+          <div className="experience-photo">
+            <Image
+              src={FOOD_IMAGES.table}
+              alt="友人と食事を囲むテーブル"
+              fill
+              sizes="(max-width: 900px) 100vw, 560px"
+              className="object-cover"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
             />
-          ) : (
-            <>
-              <Image
-                src={FOOD_IMAGES.table}
-                alt="友人と食事を囲むテーブル"
-                fill
-                sizes="(max-width: 1220px) calc(100vw - 32px), 1180px"
-                className="object-cover"
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
-                }}
-              />
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="demo-phone">
-                <PhoneFrame src="/screens/07_result_mobile_390.png" alt="GuruMeetで決まったお店の結果画面" />
-              </div>
-              {playing ? (
-                <div className="demo-placeholder glass">
-                  <p>デモ動画をここに埋め込めます</p>
-                  <a href="#screens">アプリ画面を見る <ArrowRight size={15} /></a>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setPlaying(true)}
-                  className="demo-play"
-                  aria-label="デモ動画を再生"
-                >
-                  <Play size={22} fill="currentColor" />
-                </button>
-              )}
-              <div className="demo-caption">
-                <span>GuruMeet in 30 seconds</span>
-                <strong>ルーム作成から、今日の一軒まで。</strong>
-              </div>
-            </>
-          )}
+          </div>
+          <motion.div
+            className="experience-phone"
+            whileInView={{ y: [18, 0], rotate: [-3.2, -1.2] }}
+            viewport={{ once: true, amount: 0.42 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <PhoneFrame src="/screens/07_result_mobile_390.png" alt="GuruMeetで決まったお店の結果画面" />
+          </motion.div>
+          <div className="match-panel glass">
+            <span>RESULT</span>
+            <strong>全員一致</strong>
+            <p>炭火とワイン 渋谷店</p>
+          </div>
+          <div className="finalist-panel">
+            {finalists.map((item, index) => (
+              <motion.div
+                key={item.rank}
+                initial={{ opacity: 0, x: 24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ delay: 0.16 + index * 0.09, duration: 0.48 }}
+                className="finalist-row"
+              >
+                <b>{item.rank}</b>
+                <span>{item.name}</span>
+                <strong>{item.score}</strong>
+                <i style={{ width: `${item.votes * 23}%` }} />
+              </motion.div>
+            ))}
+          </div>
+          <div className="decision-strip">
+            <span>4 people</span>
+            <span>12 cards</span>
+            <span>1 place</span>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -719,7 +727,7 @@ export function LandingPage() {
       <Solution />
       <Screens />
       <Features />
-      <Demo />
+      <Experience />
       <FinalCta />
       <Footer />
     </main>
