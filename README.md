@@ -22,7 +22,7 @@ npm test
 - `app/globals.css`: グローバルスタイル、端末モックアップ
 - `components/landing-page.tsx`: 各セクション、コピー、画像・動画URL
 - `components/phone-frame.tsx`: アプリ画面共通モックアップ
-- `public/screens/`: GuruMeet実機画面
+- `public/screens/`: GuruMeetの架空サンプル画面
 - `public/og.png`: ソーシャルプレビュー
 
 ## Replace content

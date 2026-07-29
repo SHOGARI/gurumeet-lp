@@ -26,16 +26,11 @@ import { PhoneFrame } from "./phone-frame";
 const APP_URL = "#experience";
 
 const FOOD_IMAGES = {
-  hero:
-    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1600&q=86",
-  ramen:
-    "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1200&q=84",
-  yakiniku:
-    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=84",
-  table:
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=86",
-  restaurant:
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=84",
+  hero: "/mock/hero.png",
+  ramen: "/mock/ramen.png",
+  yakiniku: "/mock/yakiniku.png",
+  table: "/mock/table.png",
+  restaurant: "/mock/restaurant.png",
 };
 
 const screens = [
@@ -50,16 +45,20 @@ const screens = [
 
 const swipeCards = [
   {
-    name: "炭火とワイン 渋谷店",
-    meta: "焼肉 · ¥3,000–4,000",
+    name: "Luna Cafe",
+    meta: "Cafe · ¥1,000-2,000 · Demo Ave 1-2",
     image: FOOD_IMAGES.yakiniku,
-    score: "4.6",
+    score: "4.8",
+    reviews: "128 reviews",
+    hours: "11:00-21:00",
   },
   {
-    name: "麺屋 しずく",
-    meta: "ラーメン · ¥1,000–2,000",
+    name: "Grill House",
+    meta: "Grill · ¥2,000-3,500 · Sample St 3-4",
     image: FOOD_IMAGES.ramen,
-    score: "4.4",
+    score: "4.6",
+    reviews: "96 reviews",
+    hours: "17:00-23:00",
   },
 ];
 
@@ -79,9 +78,9 @@ const steps = [
 ];
 
 const finalists = [
-  { rank: "01", name: "炭火とワイン", score: "92%", votes: 4 },
-  { rank: "02", name: "麺屋 しずく", score: "78%", votes: 3 },
-  { rank: "03", name: "トラットリア 8", score: "65%", votes: 2 },
+  { rank: "01", name: "Luna Cafe", score: "92%", votes: 4 },
+  { rank: "02", name: "Grill House", score: "78%", votes: 3 },
+  { rank: "03", name: "Sushi Atelier", score: "65%", votes: 2 },
 ];
 
 const fadeUp = {
@@ -252,6 +251,7 @@ function SwipeCard({ onSwipe }: { onSwipe: (direction: "left" | "right") => void
         <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
           <p className="text-xl font-bold">{card.name}</p>
           <p className="mt-1 text-xs font-medium text-white/68">{card.meta}</p>
+          <p className="mt-1 text-xs font-medium text-white/68">{card.reviews} · {card.hours}</p>
         </div>
       </motion.div>
       <div className="absolute -bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-3">
@@ -502,6 +502,9 @@ function Screens() {
           <span>07</span>
         </Reveal>
       </div>
+      <Reveal delay={0.1} className="section-shell screens-disclaimer">
+        ※画面は開発中のイメージです。店舗名・画像・住所・評価・レビュー数・営業時間はすべてデモ用のダミーデータです。
+      </Reveal>
       <div className="screen-scroller">
         {screens.map((screen, index) => (
           <motion.figure
@@ -581,9 +584,9 @@ function Features() {
               <h3>好みの重なりを、<br />ランキングで。</h3>
             </div>
             <ol className="ranking-list">
-              <li><b>01</b><span>炭火とワイン</span><strong>92%</strong></li>
-              <li><b>02</b><span>麺屋 しずく</span><strong>78%</strong></li>
-              <li><b>03</b><span>トラットリア 8</span><strong>65%</strong></li>
+              <li><b>01</b><span>Luna Cafe</span><strong>92%</strong></li>
+              <li><b>02</b><span>Grill House</span><strong>78%</strong></li>
+              <li><b>03</b><span>Sushi Atelier</span><strong>65%</strong></li>
             </ol>
           </Reveal>
 
@@ -648,7 +651,7 @@ function Experience() {
           <div className="match-panel glass">
             <span>RESULT</span>
             <strong>全員一致</strong>
-            <p>炭火とワイン 渋谷店</p>
+            <p>Luna Cafe</p>
           </div>
           <div className="finalist-panel">
             {finalists.map((item, index) => (

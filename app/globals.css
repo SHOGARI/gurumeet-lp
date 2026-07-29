@@ -670,6 +670,14 @@ button {
   background: rgba(255, 255, 255, 0.18);
 }
 
+.screens-disclaimer {
+  margin-top: 26px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 620;
+  line-height: 1.8;
+}
+
 .screen-scroller {
   display: flex;
   align-items: center;

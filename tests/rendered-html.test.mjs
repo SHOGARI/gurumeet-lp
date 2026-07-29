@@ -35,8 +35,12 @@ test("server-renders the complete GuruMeet landing page", async () => {
   assert.match(html, /迷う工程を/);
   assert.match(html, /決める人を/);
   assert.match(html, /今日のご飯/);
+  assert.match(html, /Luna Cafe/);
+  assert.match(html, /Demo Ave 1-2/);
+  assert.match(html, /画面は開発中のイメージです/);
   assert.match(html, /og:image/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
+  assert.doesNotMatch(html, /炭火|麺屋|トラットリア|GINZA|AKANE|MORI|HINATA/);
 });
 
 test("keeps SEO routes and image fallbacks in place", async () => {
@@ -51,7 +55,7 @@ test("keeps SEO routes and image fallbacks in place", async () => {
   assert.match(await robotsResponse.text(), /User-Agent:\s*\*/i);
   assert.match(
     await sitemapResponse.text(),
-    /gurumeet-lp\.vercel\.app/,
+    /lp\.gurumeet\.net/,
   );
   assert.match(pageSource, /onError=/);
   assert.match(pageSource, /prefers-reduced-motion|useReducedMotion/);
