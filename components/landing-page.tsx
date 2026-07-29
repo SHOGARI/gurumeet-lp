@@ -27,8 +27,12 @@ const APP_URL = "#experience";
 
 const FOOD_IMAGES = {
   hero: "/mock/hero.png",
-  ramen: "/mock/ramen.png",
-  yakiniku: "/mock/yakiniku.png",
+  cafe: "/mock/cafe.png",
+  grill: "/mock/grill.png",
+  sushi: "/mock/sushi.png",
+  pasta: "/mock/pasta.png",
+  yaki: "/mock/yaki.png",
+  bistro: "/mock/bistro.png",
   table: "/mock/table.png",
   restaurant: "/mock/restaurant.png",
 };
@@ -47,7 +51,7 @@ const swipeCards = [
   {
     name: "Luna Cafe",
     meta: "Cafe · ¥1,000-2,000 · Demo Ave 1-2",
-    image: FOOD_IMAGES.yakiniku,
+    image: FOOD_IMAGES.cafe,
     score: "4.8",
     reviews: "128 reviews",
     hours: "11:00-21:00",
@@ -55,10 +59,18 @@ const swipeCards = [
   {
     name: "Grill House",
     meta: "Grill · ¥2,000-3,500 · Sample St 3-4",
-    image: FOOD_IMAGES.ramen,
+    image: FOOD_IMAGES.grill,
     score: "4.6",
     reviews: "96 reviews",
     hours: "17:00-23:00",
+  },
+  {
+    name: "YAKI DINING",
+    meta: "Yaki · ¥2,500-4,000 · Imaginary Pl 8",
+    image: FOOD_IMAGES.yaki,
+    score: "4.9",
+    reviews: "142 reviews",
+    hours: "16:00-23:30",
   },
 ];
 
@@ -79,8 +91,9 @@ const steps = [
 
 const finalists = [
   { rank: "01", name: "Luna Cafe", score: "92%", votes: 4 },
-  { rank: "02", name: "Grill House", score: "78%", votes: 3 },
-  { rank: "03", name: "Sushi Atelier", score: "65%", votes: 2 },
+  { rank: "02", name: "YAKI DINING", score: "89%", votes: 4 },
+  { rank: "03", name: "Grill House", score: "78%", votes: 3 },
+  { rank: "04", name: "Sushi Atelier", score: "65%", votes: 2 },
 ];
 
 const fadeUp = {
@@ -585,8 +598,8 @@ function Features() {
             </div>
             <ol className="ranking-list">
               <li><b>01</b><span>Luna Cafe</span><strong>92%</strong></li>
-              <li><b>02</b><span>Grill House</span><strong>78%</strong></li>
-              <li><b>03</b><span>Sushi Atelier</span><strong>65%</strong></li>
+              <li><b>02</b><span>YAKI DINING</span><strong>89%</strong></li>
+              <li><b>03</b><span>Grill House</span><strong>78%</strong></li>
             </ol>
           </Reveal>
 
