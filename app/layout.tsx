@@ -26,13 +26,13 @@ export const metadata: Metadata = {
     siteName: "GuruMeet",
     title,
     description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "GuruMeet" }],
+    images: [{ url: "/og.webp", width: 1200, height: 630, alt: "GuruMeet" }],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og.png"],
+    images: ["/og.webp"],
   },
   icons: {
     icon: "/favicon.svg",

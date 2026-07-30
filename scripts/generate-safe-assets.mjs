@@ -1,13 +1,12 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
 const root = process.cwd();
 const screensDir = path.join(root, "public", "screens");
-const mockDir = path.join(root, "public", "mock");
+const restaurantDir = path.join(root, "public", "assets", "restaurants");
 
 await mkdir(screensDir, { recursive: true });
-await mkdir(mockDir, { recursive: true });
 
 const esc = (value) =>
   String(value)
@@ -91,121 +90,170 @@ function demoBadge(x, y, label = "DEMO") {
 
 const shops = [
   {
-    name: "Luna Cafe",
-    category: "Cafe",
-    price: "¥1,000-2,000",
-    distance: "徒歩5分",
-    rating: "4.8",
-    reviews: "128 reviews",
-    address: "Demo Ave 1-2",
-    hours: "11:00-21:00",
+    name: "炭火酒場 灯",
+    category: "居酒屋",
+    price: "3,000〜4,000円",
+    distance: "徒歩4分",
+    rating: "4.6",
+    reviews: "84件",
+    address: "架空町1-2-3",
+    hours: "17:00〜23:30",
     match: "92%",
     votes: 4,
     theme: "cafe",
-    note: "焼きたてデザートと夜カフェ",
+    image: "restaurant_izakaya.webp",
+    note: "炭火料理を囲むモダン酒場",
   },
   {
-    name: "Grill House",
-    category: "Grill",
-    price: "¥2,000-3,500",
-    distance: "徒歩8分",
-    rating: "4.6",
-    reviews: "96 reviews",
-    address: "Sample St 3-4",
-    hours: "17:00-23:00",
+    name: "Trattoria Lino",
+    category: "イタリアン",
+    price: "2,000〜3,000円",
+    distance: "徒歩6分",
+    rating: "4.5",
+    reviews: "112件",
+    address: "サンプル通り2-4",
+    hours: "11:30〜22:00",
     match: "78%",
     votes: 3,
     theme: "grill",
-    note: "香ばしいグリルプレート",
+    image: "restaurant_italian.webp",
+    note: "光が入るカジュアルトラットリア",
   },
   {
-    name: "Sushi Atelier",
-    category: "Sushi",
-    price: "¥3,000-5,000",
-    distance: "徒歩6分",
+    name: "SEOUL TABLE",
+    category: "韓国料理",
+    price: "2,000〜3,000円",
+    distance: "徒歩3分",
     rating: "4.7",
-    reviews: "74 reviews",
-    address: "Mock Rd 5-6",
-    hours: "18:00-22:30",
-    match: "65%",
-    votes: 2,
-    theme: "sushi",
-    note: "小さな寿司アトリエ",
-  },
-  {
-    name: "Pasta Garden",
-    category: "Italian",
-    price: "¥1,500-3,000",
-    distance: "徒歩9分",
-    rating: "4.5",
-    reviews: "88 reviews",
-    address: "Fiction Ln 7",
-    hours: "11:30-22:00",
-    match: "61%",
-    votes: 2,
-    theme: "pasta",
-    note: "緑の中のパスタテーブル",
-  },
-  {
-    name: "YAKI DINING",
-    category: "Yaki",
-    price: "¥2,500-4,000",
-    distance: "徒歩4分",
-    rating: "4.9",
-    reviews: "142 reviews",
-    address: "Imaginary Pl 8",
-    hours: "16:00-23:30",
+    reviews: "96件",
+    address: "デモ横丁3-1",
+    hours: "17:00〜23:00",
     match: "89%",
     votes: 4,
-    theme: "yaki",
-    note: "鉄板を囲むダイニング",
+    theme: "sushi",
+    image: "restaurant_korean.webp",
+    note: "ネオンで楽しむ韓国テーブル",
   },
   {
-    name: "Bistro Bloom",
-    category: "Bistro",
-    price: "¥2,000-4,000",
-    distance: "徒歩7分",
+    name: "旬菜ダイニング 凪",
+    category: "和食",
+    price: "3,000〜4,000円",
+    distance: "徒歩5分",
+    rating: "4.6",
+    reviews: "73件",
+    address: "架空町4-5-6",
+    hours: "11:30〜22:30",
+    match: "65%",
+    votes: 2,
+    theme: "pasta",
+    image: "restaurant_japanese.webp",
+    note: "旬の定食を味わう静かな和食店",
+  },
+  {
+    name: "麺処 青葉路",
+    category: "ラーメン",
+    price: "1,000〜1,500円",
+    distance: "徒歩4分",
     rating: "4.4",
-    reviews: "67 reviews",
-    address: "Bloom Ct 9",
-    hours: "12:00-22:00",
+    reviews: "138件",
+    address: "デモ坂5-2",
+    hours: "11:00〜22:00",
     match: "72%",
     votes: 3,
-    theme: "bistro",
-    note: "花とビストロプレート",
+    theme: "yaki",
+    image: "restaurant_ramen.webp",
+    note: "カウンターで味わう醤油らーめん",
   },
   {
-    name: "Cafe Terrace",
-    category: "Cafe",
-    price: "¥1,000-2,500",
-    distance: "徒歩10分",
-    rating: "4.3",
-    reviews: "54 reviews",
-    address: "Terrace Way 10",
-    hours: "09:00-20:00",
-    match: "58%",
+    name: "Cafe Rill",
+    category: "カフェ",
+    price: "1,000〜2,000円",
+    distance: "徒歩7分",
+    rating: "4.5",
+    reviews: "68件",
+    address: "サンプル通り6-3",
+    hours: "09:00〜20:00",
+    match: "63%",
+    votes: 3,
+    theme: "bistro",
+    image: "restaurant_cafe.webp",
+    note: "光と緑のカジュアルカフェ",
+  },
+  {
+    name: "炭火焼肉 宵",
+    category: "焼肉",
+    price: "3,000〜4,000円",
+    distance: "徒歩8分",
+    rating: "4.6",
+    reviews: "121件",
+    address: "架空町7-8-1",
+    hours: "17:00〜23:30",
+    match: "70%",
     votes: 2,
     theme: "cafe",
-    note: "風の通るテラス席",
+    image: "restaurant_yakiniku.webp",
+    note: "気軽に囲める炭火焼肉",
   },
   {
-    name: "Noodle Studio",
-    category: "Noodle",
-    price: "¥1,000-2,000",
-    distance: "徒歩6分",
-    rating: "4.5",
-    reviews: "113 reviews",
-    address: "Studio Rd 11",
-    hours: "11:00-22:00",
-    match: "69%",
+    name: "青藍飯店",
+    category: "中華料理",
+    price: "1,500〜2,500円",
+    distance: "徒歩5分",
+    rating: "4.3",
+    reviews: "89件",
+    address: "デモ横丁8-2",
+    hours: "11:00〜22:00",
+    match: "68%",
     votes: 3,
     theme: "pasta",
-    note: "創作ヌードルの小さな工房",
+    image: "restaurant_chinese.webp",
+    note: "みんなで囲むカジュアル中華",
+  },
+  {
+    name: "鮨まどか",
+    category: "寿司",
+    price: "2,500〜4,000円",
+    distance: "徒歩6分",
+    rating: "4.7",
+    reviews: "76件",
+    address: "架空町9-3",
+    hours: "17:00〜22:30",
+    match: "66%",
+    votes: 2,
+    theme: "sushi",
+    image: "restaurant_sushi.webp",
+    note: "気軽に楽しむカウンター寿司",
+  },
+  {
+    name: "BAR CANTO",
+    category: "バル",
+    price: "2,000〜3,000円",
+    distance: "徒歩7分",
+    rating: "4.4",
+    reviews: "61件",
+    address: "サンプル通り10-1",
+    hours: "17:00〜24:00",
+    match: "64%",
+    votes: 2,
+    theme: "bistro",
+    image: "restaurant_bar.webp",
+    note: "小皿料理と楽しむカジュアルバル",
   },
 ];
 
+for (const shop of shops) {
+  const source = await readFile(path.join(restaurantDir, shop.image));
+  shop.imageUri = `data:image/png;base64,${(
+    await sharp(source).png().toBuffer()
+  ).toString("base64")}`;
+}
+
 function ambience(x, y, w, h, shop, rounded = 42) {
   const id = `clip-${x}-${y}-${shop.theme}`;
+  if (shop.imageUri) {
+    return `<clipPath id="${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rounded}"/></clipPath>
+      <image x="${x}" y="${y}" width="${w}" height="${h}" href="${shop.imageUri}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
+  }
   const centerX = x + w * 0.52;
   const centerY = y + h * 0.52;
   const plate = `<ellipse cx="${centerX}" cy="${centerY}" rx="${w * 0.27}" ry="${h * 0.22}" fill="#fff8f3" opacity=".92"/>
@@ -311,7 +359,7 @@ const screenDefs = [
       ${text(92, 840, "予算: ¥1,000-4,000", 28, 760)}
       <rect x="52" y="922" width="676" height="248" rx="42" fill="#fff" stroke="#efd4cf" stroke-width="2"/>
       ${text(92, 990, "候補プレビュー", 27, 800)}
-      ${[shops[0], shops[1], shops[4]].map((s, i) => `<rect x="92" y="${1024 + i * 42}" width="536" height="30" rx="15" fill="${i === 0 ? "#fff4ef" : "#f7efeb"}"/><text x="116" y="${1046 + i * 42}" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#171717">${s.name}</text><text x="604" y="${1046 + i * 42}" text-anchor="end" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#f25440">★${s.rating}</text>`).join("")}
+      ${[shops[0], shops[1], shops[2]].map((s, i) => `<rect x="92" y="${1024 + i * 42}" width="536" height="30" rx="15" fill="${i === 0 ? "#fff4ef" : "#f7efeb"}"/><text x="116" y="${1046 + i * 42}" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#171717">${s.name}</text><text x="604" y="${1046 + i * 42}" text-anchor="end" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#f25440">★${s.rating}</text>`).join("")}
       <rect x="52" y="1228" width="676" height="92" rx="46" fill="#f25440"/>
       ${text(390, 1288, "ルームを作る", 29, 800, "#fff", "middle")}
       ${bottomNav(0)}`,
@@ -366,7 +414,7 @@ const screenDefs = [
       ${["Yuka", "Ken", "Mio", "Aki"].map((n, i) => `<rect x="92" y="${430 + i * 54}" width="400" height="38" rx="19" fill="#ffffff14"/><circle cx="112" cy="${449 + i * 54}" r="14" fill="#ff735e"/><text x="140" y="${457 + i * 54}" font-family="Arial" font-size="22" font-weight="800" fill="#fff">${n}</text>`).join("")}
       <rect x="52" y="746" width="676" height="282" rx="42" fill="#fff" stroke="#efd4cf" stroke-width="2"/>
       ${text(92, 812, "準備したデモ候補", 28, 800)}
-      ${[shops[0], shops[1], shops[2], shops[4]].map((s, i) => `<rect x="92" y="${852 + i * 42}" width="536" height="30" rx="15" fill="#fff4ef"/><text x="116" y="${874 + i * 42}" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#171717">${s.name}</text><text x="604" y="${874 + i * 42}" text-anchor="end" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#f25440">${s.distance}</text>`).join("")}
+      ${[shops[0], shops[1], shops[2], shops[3]].map((s, i) => `<rect x="92" y="${852 + i * 42}" width="536" height="30" rx="15" fill="#fff4ef"/><text x="116" y="${874 + i * 42}" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#171717">${s.name}</text><text x="604" y="${874 + i * 42}" text-anchor="end" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#f25440">${s.distance}</text>`).join("")}
       <rect x="52" y="1098" width="676" height="92" rx="46" fill="#f25440"/>
       ${text(390, 1158, "スワイプ開始", 29, 800, "#fff", "middle")}
       ${bottomNav(1)}`,
@@ -404,7 +452,7 @@ const screenDefs = [
       <rect x="86" y="820" width="608" height="28" rx="14" fill="#f25440"/>
       <rect x="52" y="950" width="676" height="306" rx="42" fill="#fff" stroke="#efd4cf" stroke-width="2"/>
       ${text(92, 1018, "一致度を計算中", 32, 850)}
-      ${[shops[0], shops[4], shops[1]].map((s, i) => `<rect x="92" y="${1064 + i * 50}" width="536" height="36" rx="18" fill="#fff4ef"/><text x="116" y="${1089 + i * 50}" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#171717">${s.name}</text><text x="604" y="${1089 + i * 50}" text-anchor="end" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#f25440">${s.match}</text>`).join("")}
+      ${[shops[0], shops[2], shops[1]].map((s, i) => `<rect x="92" y="${1064 + i * 50}" width="536" height="36" rx="18" fill="#fff4ef"/><text x="116" y="${1089 + i * 50}" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#171717">${s.name}</text><text x="604" y="${1089 + i * 50}" text-anchor="end" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#f25440">${s.match}</text>`).join("")}
       ${bottomNav(2)}`,
     ),
   },
@@ -420,7 +468,7 @@ const screenDefs = [
       ${text(92, 1060, shops[0].name, 44, 900, "#fff")}
       ${text(92, 1112, `一致度 ${shops[0].match} ・ ★${shops[0].rating} ・ ${shops[0].reviews}`, 24, 760, "#ffffffa8")}
       ${text(92, 1158, `${shops[0].address} ・ ${shops[0].hours}`, 21, 760, "#ffffff92")}
-      ${[shops[4], shops[1]].map((s, i) => `<rect x="92" y="${1200 + i * 56}" width="536" height="40" rx="20" fill="#ffffff14"/><text x="116" y="${1227 + i * 56}" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="#fff">${s.name}</text><text x="600" y="${1227 + i * 56}" text-anchor="end" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="#ffb7aa">${s.match}</text>`).join("")}
+      ${[shops[2], shops[1]].map((s, i) => `<rect x="92" y="${1200 + i * 56}" width="536" height="40" rx="20" fill="#ffffff14"/><text x="116" y="${1227 + i * 56}" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="#fff">${s.name}</text><text x="600" y="${1227 + i * 56}" text-anchor="end" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="#ffb7aa">${s.match}</text>`).join("")}
       ${bottomNav(2)}`,
     ),
   },
@@ -430,67 +478,4 @@ for (const def of screenDefs) {
   await sharp(svg(780, 1688, def.body)).png().toFile(path.join(screensDir, def.file));
 }
 
-const mockImageDefs = [
-  ["hero.png", shops[0], "#fff3ec"],
-  ["cafe.png", shops[0], "#fff2ec"],
-  ["grill.png", shops[1], "#fff1df"],
-  ["sushi.png", shops[2], "#edf8f2"],
-  ["pasta.png", shops[3], "#fff6d9"],
-  ["yaki.png", shops[4], "#fff0ee"],
-  ["bistro.png", shops[5], "#f2efff"],
-  ["terrace.png", shops[6], "#fff4ea"],
-  ["noodle.png", shops[7], "#fff7df"],
-  ["table.png", shops[5], "#f2efff"],
-  ["restaurant.png", shops[4], "#fff0ee"],
-];
-
-for (const [file, shop, bg] of mockImageDefs) {
-  await sharp(
-    svg(
-      1600,
-      1100,
-      `<rect width="1600" height="1100" fill="${bg}"/>
-      <circle cx="1210" cy="260" r="260" fill="#f25440" opacity=".08"/>
-      <circle cx="360" cy="780" r="360" fill="#171717" opacity=".05"/>
-      <rect x="180" y="160" width="1240" height="780" rx="92" fill="#fff" filter="url(#softShadow)"/>
-      ${ambience(260, 250, 560, 570, shop, 64)}
-      ${text(900, 330, shop.name, 64, 900)}
-      ${text(900, 398, `${shop.category} / ${shop.price}`, 32, 760, "#6a5d59")}
-      ${text(900, 462, `★${shop.rating}  ${shop.reviews}`, 30, 800, "#f25440")}
-      ${text(900, 522, `${shop.address} ・ ${shop.hours}`, 27, 760, "#6a5d59")}
-      <rect x="900" y="620" width="280" height="76" rx="38" fill="#f25440"/>
-      ${text(1040, 669, "DEMO SHOP", 30, 900, "#fff", "middle")}
-      <rect x="900" y="744" width="390" height="28" rx="14" fill="#171717" opacity=".13"/>
-      <rect x="900" y="800" width="310" height="28" rx="14" fill="#171717" opacity=".09"/>`,
-    ),
-  )
-    .png()
-    .toFile(path.join(mockDir, file));
-}
-
-await sharp(
-  svg(
-    1200,
-    630,
-    `<rect width="1200" height="630" fill="#fff8f3"/>
-    <circle cx="1030" cy="80" r="230" fill="#ff5a41" opacity=".08"/>
-    <rect x="730" y="58" width="308" height="514" rx="54" fill="#111" filter="url(#softShadow)"/>
-    <rect x="754" y="92" width="260" height="448" rx="38" fill="#fff8f3"/>
-    ${ambience(786, 144, 196, 172, shops[0], 34)}
-    ${text(786, 374, shops[0].name, 31, 900)}
-    ${text(786, 414, `★${shops[0].rating} ・ ${shops[0].price}`, 18, 800, "#f25440")}
-    <circle cx="828" cy="496" r="34" fill="#ffd9d4"/>
-    ${text(828, 508, "×", 32, 700, "#9e1010", "middle")}
-    <circle cx="944" cy="496" r="34" fill="#f25440"/>
-    ${text(944, 508, "♥", 28, 800, "#fff", "middle")}
-    ${text(148, 178, "GuruMeet", 54, 900)}
-    ${text(148, 296, "「何食べる？」を、", 58, 900)}
-    ${text(148, 384, "10秒で終わらせる。", 58, 900)}
-    <rect x="148" y="450" width="282" height="54" rx="27" fill="#f25440"/>
-    ${text(289, 486, "架空店舗の画面イメージ", 23, 850, "#fff", "middle")}`,
-  ),
-)
-  .png()
-  .toFile(path.join(root, "public", "og.png"));
-
-console.log("Generated richer fictional GuruMeet assets.");
+console.log("Generated fictional GuruMeet app screens.");

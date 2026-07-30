@@ -26,15 +26,16 @@ import { PhoneFrame } from "./phone-frame";
 const APP_URL = "#experience";
 
 const FOOD_IMAGES = {
-  hero: "/mock/hero.png",
-  cafe: "/mock/cafe.png",
-  grill: "/mock/grill.png",
-  sushi: "/mock/sushi.png",
-  pasta: "/mock/pasta.png",
-  yaki: "/mock/yaki.png",
-  bistro: "/mock/bistro.png",
-  table: "/mock/table.png",
-  restaurant: "/mock/restaurant.png",
+  izakaya: "/assets/restaurants/restaurant_izakaya.webp",
+  italian: "/assets/restaurants/restaurant_italian.webp",
+  korean: "/assets/restaurants/restaurant_korean.webp",
+  japanese: "/assets/restaurants/restaurant_japanese.webp",
+  ramen: "/assets/restaurants/restaurant_ramen.webp",
+  cafe: "/assets/restaurants/restaurant_cafe.webp",
+  yakiniku: "/assets/restaurants/restaurant_yakiniku.webp",
+  chinese: "/assets/restaurants/restaurant_chinese.webp",
+  sushi: "/assets/restaurants/restaurant_sushi.webp",
+  bar: "/assets/restaurants/restaurant_bar.webp",
 };
 
 const screens = [
@@ -49,28 +50,54 @@ const screens = [
 
 const swipeCards = [
   {
-    name: "Luna Cafe",
-    meta: "Cafe · ¥1,000-2,000 · Demo Ave 1-2",
-    image: FOOD_IMAGES.cafe,
-    score: "4.8",
-    reviews: "128 reviews",
-    hours: "11:00-21:00",
-  },
-  {
-    name: "Grill House",
-    meta: "Grill · ¥2,000-3,500 · Sample St 3-4",
-    image: FOOD_IMAGES.grill,
+    name: "炭火酒場 灯",
+    genre: "モダン居酒屋",
+    meta: "居酒屋 · 3,000〜4,000円",
+    image: FOOD_IMAGES.izakaya,
     score: "4.6",
-    reviews: "96 reviews",
-    hours: "17:00-23:00",
+    reviews: "84件",
+    distance: "徒歩4分",
+    hours: "17:00〜23:30",
   },
   {
-    name: "YAKI DINING",
-    meta: "Yaki · ¥2,500-4,000 · Imaginary Pl 8",
-    image: FOOD_IMAGES.yaki,
-    score: "4.9",
-    reviews: "142 reviews",
-    hours: "16:00-23:30",
+    name: "Trattoria Lino",
+    genre: "カジュアルイタリアン",
+    meta: "イタリアン · 2,000〜3,000円",
+    image: FOOD_IMAGES.italian,
+    score: "4.5",
+    reviews: "112件",
+    distance: "徒歩6分",
+    hours: "11:30〜22:00",
+  },
+  {
+    name: "SEOUL TABLE",
+    genre: "韓国料理",
+    meta: "韓国料理 · 2,000〜3,000円",
+    image: FOOD_IMAGES.korean,
+    score: "4.7",
+    reviews: "96件",
+    distance: "徒歩3分",
+    hours: "17:00〜23:00",
+  },
+  {
+    name: "旬菜ダイニング 凪",
+    genre: "和食ダイニング",
+    meta: "和食 · 3,000〜4,000円",
+    image: FOOD_IMAGES.japanese,
+    score: "4.6",
+    reviews: "73件",
+    distance: "徒歩5分",
+    hours: "11:30〜22:30",
+  },
+  {
+    name: "麺処 青葉路",
+    genre: "ラーメン",
+    meta: "ラーメン · 1,000〜1,500円",
+    image: FOOD_IMAGES.ramen,
+    score: "4.4",
+    reviews: "138件",
+    distance: "徒歩4分",
+    hours: "11:00〜22:00",
   },
 ];
 
@@ -90,10 +117,10 @@ const steps = [
 ];
 
 const finalists = [
-  { rank: "01", name: "Luna Cafe", score: "92%", votes: 4 },
-  { rank: "02", name: "YAKI DINING", score: "89%", votes: 4 },
-  { rank: "03", name: "Grill House", score: "78%", votes: 3 },
-  { rank: "04", name: "Sushi Atelier", score: "65%", votes: 2 },
+  { rank: "01", name: "炭火酒場 灯", score: "92%", votes: 4 },
+  { rank: "02", name: "SEOUL TABLE", score: "89%", votes: 4 },
+  { rank: "03", name: "Trattoria Lino", score: "78%", votes: 3 },
+  { rank: "04", name: "旬菜ダイニング 凪", score: "65%", votes: 2 },
 ];
 
 const fadeUp = {
@@ -243,9 +270,10 @@ function SwipeCard({ onSwipe }: { onSwipe: (direction: "left" | "right") => void
       >
         <Image
           src={card.image}
-          alt={card.name}
+          alt={`${card.genre}の架空店舗「${card.name}」の店内と料理`}
           fill
           priority
+          unoptimized
           sizes="(max-width: 768px) 82vw, 400px"
           className="object-cover"
           onError={(event) => {
@@ -255,7 +283,7 @@ function SwipeCard({ onSwipe }: { onSwipe: (direction: "left" | "right") => void
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(8,8,8,.82)_100%)]" />
         <div className="absolute left-5 right-5 top-5 flex items-center justify-between">
           <span className="rounded-full bg-white/88 px-3 py-1.5 text-[11px] font-bold text-black backdrop-blur">
-            徒歩 5分
+            {card.distance}
           </span>
           <span className="rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur">
             ★ {card.score}
@@ -294,10 +322,11 @@ function Hero() {
     <section id="top" ref={sectionRef} className="hero-section">
       <div className="hero-photo" aria-hidden="true">
         <Image
-          src={FOOD_IMAGES.hero}
-          alt=""
+          src={FOOD_IMAGES.izakaya}
+          alt="木目と暖色照明の架空モダン居酒屋"
           fill
           priority
+          unoptimized
           sizes="100vw"
           className="object-cover"
           onError={(event) => {
@@ -516,7 +545,7 @@ function Screens() {
         </Reveal>
       </div>
       <Reveal delay={0.1} className="section-shell screens-disclaimer">
-        ※画面は開発中のイメージです。店舗名・画像・住所・評価・レビュー数・営業時間はすべてデモ用のダミーデータです。
+        ※画面内の店舗名・画像・評価・料金等はデモ用の架空データです。
       </Reveal>
       <div className="screen-scroller">
         {screens.map((screen, index) => (
@@ -574,9 +603,10 @@ function Features() {
 
           <Reveal delay={0.05} className="bento bento-map">
             <Image
-              src={FOOD_IMAGES.restaurant}
-              alt="現在地から近いレストラン"
+              src={FOOD_IMAGES.korean}
+              alt="ネオン照明を使った架空の韓国料理店"
               fill
+              unoptimized
               sizes="(max-width: 900px) 100vw, 42vw"
               className="object-cover"
               onError={(event) => {
@@ -597,9 +627,9 @@ function Features() {
               <h3>好みの重なりを、<br />ランキングで。</h3>
             </div>
             <ol className="ranking-list">
-              <li><b>01</b><span>Luna Cafe</span><strong>92%</strong></li>
-              <li><b>02</b><span>YAKI DINING</span><strong>89%</strong></li>
-              <li><b>03</b><span>Grill House</span><strong>78%</strong></li>
+              <li><b>01</b><span>炭火酒場 灯</span><strong>92%</strong></li>
+              <li><b>02</b><span>SEOUL TABLE</span><strong>89%</strong></li>
+              <li><b>03</b><span>Trattoria Lino</span><strong>78%</strong></li>
             </ol>
           </Reveal>
 
@@ -643,9 +673,10 @@ function Experience() {
         <Reveal delay={0.07} className="experience-stage">
           <div className="experience-photo">
             <Image
-              src={FOOD_IMAGES.table}
-              alt="友人と食事を囲むテーブル"
+              src={FOOD_IMAGES.bar}
+              alt="架空のカジュアルバルの料理とドリンク"
               fill
+              unoptimized
               sizes="(max-width: 900px) 100vw, 560px"
               className="object-cover"
               onError={(event) => {
@@ -664,7 +695,7 @@ function Experience() {
           <div className="match-panel glass">
             <span>RESULT</span>
             <strong>全員一致</strong>
-            <p>Luna Cafe</p>
+            <p>炭火酒場 灯</p>
           </div>
           <div className="finalist-panel">
             {finalists.map((item, index) => (

@@ -35,12 +35,13 @@ test("server-renders the complete GuruMeet landing page", async () => {
   assert.match(html, /迷う工程を/);
   assert.match(html, /決める人を/);
   assert.match(html, /今日のご飯/);
-  assert.match(html, /Luna Cafe/);
-  assert.match(html, /Demo Ave 1-2/);
-  assert.match(html, /画面は開発中のイメージです/);
+  assert.match(html, /炭火酒場 灯/);
+  assert.match(html, /Trattoria Lino/);
+  assert.match(html, /SEOUL TABLE/);
+  assert.match(html, /デモ用の架空データ/);
   assert.match(html, /og:image/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
-  assert.doesNotMatch(html, /炭火|麺屋|トラットリア|GINZA|AKANE|MORI|HINATA/);
+  assert.doesNotMatch(html, /GINZA|AKANE|MORI|HINATA/);
 });
 
 test("keeps SEO routes and image fallbacks in place", async () => {

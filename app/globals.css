@@ -223,7 +223,7 @@ button {
 .hero-title {
   max-width: 760px;
   margin-top: 18px;
-  font-size: clamp(52px, 6.35vw, 88px);
+  font-size: clamp(52px, 5vw, 78px);
   font-weight: 700;
   line-height: 1.03;
 }
@@ -1202,6 +1202,12 @@ button {
 
   .bento-grid {
     grid-template-rows: 420px 340px 310px;
+  }
+}
+
+@media (min-width: 768px) {
+  .icon-button {
+    display: none;
   }
 }
 
